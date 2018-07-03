@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome Bluamore</title>
+    <style>
+    * {
+  margin: 0;
+  padding: 0;
+}
+li{
+  color:rgb(100,100,100);
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  transition: all 1s;
+}
+li span{
+  display: inline-block;
+  line-height: 1;
+  margin-left: 5px;
+}
+ul{
+  list-style: none;
+  display: inline-block;
+}
+.circle-wrap{
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgb(230,230,230);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .3s;
+}
+.circle-wrap div{
+  width:0%;
+  height: 0%;
+  border-radius: 50%;
+  background-color: rgb(12,12,30);
+  transition: all .3s;
+}
+.item-active .circle-wrap div{
+  width:80%;
+  height: 80%;
+  border-radius: 50%;
+  background-color: rgb(12,12,30);
+  transition: all .3s;
+}
+.item-indicator{
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.item-active .circle-wrap{
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgb(230,230,230);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .3s;
+}
+.item-active a{
+  color:rgb(230,230,230);
+}
+.item-active{
+  transition: all 1s;
+}
+a{
+  text-decoration: none;
+  color: rgb(100,100,100);
+}
+.message-wrap{
+  position: fixed;
+  right:150px;
+  top: 50%;
+  filter: blur(50px);
+  transition: filter 2s .5s;
+}
+.show{
+  filter: blur(0px);
+}
+img{
+  width:100%;
+}
+#message a{
+  display: none;
+  text-decoration: none;
+}
+    </style>
+    <script src="https://unpkg.com/three"></script>
+<script src="./Tool.js"></script>
+<script src="./pointobj.js"></script>
+<script src="./models.js"></script>
+<script src="./messager.js"></script>
+<script src="./animationer.js"></script>
+<script src="./skystars.js"></script>
+<script src="./navigator.js"></script>
+<script type="x-shader/x-vertex" id="vertexshader">
+  uniform float time;
+  uniform bool run;
+  uniform int transformnum;
+  attribute float start;
+  attribute vec3 eposition;
+  attribute float show;
+  varying float texturet;
+  varying float disz;
+  void main() {
+    texturet=0.0;
+    vec4 newPosition;
+    float timegap=time-start;
+    newPosition=vec4( position, 1.0 );
+    if(run){
+      newPosition=vec4( eposition, 1.0 );
+      if(show==0.0){
+        texturet=3.0;
+      }
+    }
+    if(timegap>0.0&&run){
+        float loopnum=floor(floor(timegap/500.0)/10.0)+1.0;
+        float direction=fract(loopnum/2.0);
+        float step=float(floor(timegap/500.0))-(loopnum-1.0)*10.0;
+        if(direction==0.0){
+          newPosition=vec4( eposition+vec3(0.015,0.0,0.0)-step*vec3(0.0015,0.0,0.0), 1.0 );
+        }else{
+        newPosition=vec4( eposition+step*vec3(0.0015,0.0,0.0), 1.0 );
+       }
+      if(fract(floor(timegap/500.0)/2.0)==0.0){
+        texturet=1.0;
+      }else{
+        texturet=0.0;
+      }
+      if(show==0.0){
+        texturet=3.0;
+      }
+    }
+    if(timegap>0.0&&!run){
+      if(floor(timegap/2000.0)>=1.0){
+          newPosition=vec4(eposition,1.0);
+          if(show==0.0){
+            texturet=3.0;
+          }
+      }else{
+        vec3 dis=eposition-position;
+        newPosition=vec4(position+vec3((timegap/2000.0)*dis.x,(timegap/2000.0)*dis.y,(timegap/2000.0)*dis.z),1.0);
+      }
+    }
+
+    gl_PointSize = 20.0;
+    disz=abs((modelViewMatrix * newPosition).x-0.5);
+    gl_Position = projectionMatrix * modelViewMatrix * newPosition;
+  }
+</script>
+
+<script type="x-shader/x-fragment" id="fragmentshader">
+  uniform sampler2D texture;
+  uniform sampler2D texture1;
+  varying float texturet;
+  varying float disz;
+  void main() {
+    float factor=clamp((disz-0.0)/4.5, 0.0, 1.0);
+    if(texturet==0.0){
+    gl_FragColor = mix(texture2D( texture, gl_PointCoord ),vec4(0.0,0.0,0.0,0.0),factor);
+  }
+    else{
+      if(texturet==3.0){
+        discard;
+      }else{
+      gl_FragColor = mix(texture2D( texture, gl_PointCoord ),vec4(0.0,0.0,0.0,0.0),factor);
+    }
+  }
+}
+</script>
+  </head>
+  <body>
+    <div id="navbar" style="position:fixed;left:30px;top:0px;z-index:1;height:100%;display:flex;  align-items:center;">
+       <ul id="nav-ul">
+         <li class="item-active" >
+           <div class="item-indicator">
+           <div  class="circle-wrap">
+              <div></div>
+            </div>
+          </div>
+            <span><a href="javascript:;" itemnum="0">官网</a></span>
+          </li>
+         <li >
+           <div class="item-indicator">
+           <div class="circle-wrap">
+              <div ></div>
+            </div>
+          </div>
+            <span><a href="javascript:;" itemnum="1">天猫</a></span>
+          </li>
+         <li >
+           <div class="item-indicator">
+           <div class="circle-wrap">
+              <div ></div>
+            </div>
+          </div>
+            <span><a href="javascript:;" itemnum="2">淘宝</a></span>
+          </li></li>
+         <li >
+           <div class="item-indicator">
+           <div class="circle-wrap">
+              <div ></div>
+            </div>
+          </div>
+            <span><a href="javascript:;" itemnum="3">京东</a></span>
+          </li>
+       </ul>
+    </div>
+    <div id="message" class="message-wrap">
+      <a target="_blank" href="http://www.bluamore.com/index.php"><img src="./bluamore.png"/></a>
+      <a target="_blank" href="https://bluamore.tmall.com/"><img src="./tmall.png"/></a>
+      <a target="_blank" href="https://bluamore.taobao.com/"><img src="./tao.png"/></a>
+      <a target="_blank" href="https://mall.jd.com/index-715005.html"><img src="./jd.png"/></a>
+    </div>
+    <script src="./index.js"></script>
+  </body>
+</html>
