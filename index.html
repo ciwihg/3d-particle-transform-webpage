@@ -3,11 +3,16 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Bluamore是意大利著名的轻奢侈女装品牌，位于意大利大牌云集的品牌女装生产基地Carpi，与同档次的Liu.Jo和Denny Rose处于同一个工业区。主要生产连衣裙,套装,裤子,衬衫,针织衫,半身裙,T恤等轻奢侈女装，快乐、自由、精致、时尚的设计理念和多变搭配风格，尽显时尚女性的个性之美。目前广州存壕贸易有限公司成为bluamore意大利品牌女装中国区的指定代理商，欢迎大家过来咨询，购买。">
+    <meta name="keywords" content="Bluamore,意大利品牌女装,意大利轻奢品牌女装,意大利女装,意大利女装裤子,意大利女装衬衫,意大利女装针织衫,意大利半身裙,意大利女装T恤">
     <title>Welcome Bluamore</title>
     <style>
     * {
   margin: 0;
   padding: 0;
+}
+body{
+  overflow: hidden;
 }
 li{
   color:rgb(100,100,100);
@@ -87,21 +92,39 @@ a{
   filter: blur(0px);
 }
 img{
-  width:100%;
+
 }
 #message a{
   display: none;
   text-decoration: none;
 }
+@media screen and (max-width: 500px) {
+    #message a {
+      display: none;
+      text-decoration: none;
+      margin-left: -50%;
+     }
+     .show{
+       filter: blur(0px) !important;
+     }
+     .message-wrap{
+       position: fixed;
+       left:50%;
+       right:auto;
+       top:auto;
+       bottom: 10px;
+       filter: blur(50px);
+       transition: filter 2s .5s;
+     }
+}
     </style>
     <script src="https://unpkg.com/three"></script>
-<script src="./Tool.js"></script>
-<script src="./pointobj.js"></script>
-<script src="./models.js"></script>
-<script src="./messager.js"></script>
-<script src="./animationer.js"></script>
-<script src="./skystars.js"></script>
-<script src="./navigator.js"></script>
+<script src="./3d/lib/pointobj.js"></script>
+<script src="./3d/model/models.js"></script>
+<script src="./3d/lib/messager.js"></script>
+<script src="./3d/lib/animationer.js"></script>
+<script src="./3d/lib/skystars.js"></script>
+<script src="./3d/lib/navigator.js"></script>
 <script type="x-shader/x-vertex" id="vertexshader">
   uniform float time;
   uniform bool run;
@@ -216,11 +239,11 @@ img{
        </ul>
     </div>
     <div id="message" class="message-wrap">
-      <a target="_blank" href="http://www.bluamore.com/index.php"><img src="./bluamore.png"/></a>
-      <a target="_blank" href="https://bluamore.tmall.com/"><img src="./tmall.png"/></a>
-      <a target="_blank" href="https://bluamore.taobao.com/"><img src="./tao.png"/></a>
-      <a target="_blank" href="https://mall.jd.com/index-715005.html"><img src="./jd.png"/></a>
+      <a target="_blank" href="http://www.bluamore.com/index.php"><img src="./3d/img/bluamore.png"/></a>
+      <a target="_blank" href="https://bluamore.tmall.com/"><img src="./3d/img/tmall.png"/></a>
+      <a target="_blank" href="https://bluamore.taobao.com/"><img src="./3d/img/tao.png"/></a>
+      <a target="_blank" href="https://mall.jd.com/index-715005.html"><img src="./3d/img/jd.png"/></a>
     </div>
-    <script src="./index.js"></script>
+    <script src="./3d/js/index.js"></script>
   </body>
 </html>
