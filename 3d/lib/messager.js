@@ -12,11 +12,12 @@ function messager(){
     };
     this.clear=function(){
       (this.current!==null)&&(this.tips[this.current].style.display="none");
-      this.tips[0].parentNode.className="message-wrap";
+      this.tips[0].className="";
     };
     this.to=function (index) {
       this.tips[index].style.display="block";
-      this.tips[index].parentNode.className="message-wrap show";
+      this.tips[index].clientWidth;
+      this.tips[index].className="show";
       this.current=index;
     };
 }
